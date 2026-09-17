@@ -1,7 +1,7 @@
 import React from 'react';
-import { X, Printer, ShieldCheck, FileCheck, CheckCircle2, Building2, User, Car, Download } from 'lucide-react';
+import { X, Printer, ShieldCheck, FileCheck, CheckCircle2, Building2, User, Car, Download, Shield } from 'lucide-react';
 import { Booking, Vehicle } from '../types';
-import { formatConverted } from '../utils/pricing';
+import { useUser } from '../context/UserContext';
 
 interface RentalAgreementModalProps {
   booking?: Booking | null;
@@ -14,15 +14,26 @@ export const RentalAgreementModal: React.FC<RentalAgreementModalProps> = ({
   vehicle,
   onClose
 }) => {
+  const { user } = useUser();
+
   const handlePrint = () => {
     window.print();
   };
 
   // Fallbacks if viewing a blank sample template
-  const renterName = booking?.customerName || 'Verified Primary Driver';
-  const renterLicense = booking?.drivingLicenseNumber || 'DL-VERIFIED-XXXXX';
-  const renterEmail = booking?.customerEmail || 'renter@email.com';
-  const renterPhone = booking?.customerPhone || '+1 (555) 019-2834';
+  const renterName = booking?.customerName || user?.name || 'Verified Primary Driver';
+  const renterAge = booking?.customerAge || user?.age || 24;
+  const renterGender = booking?.customerGender || user?.gender || 'Female';
+  const renterLicense = booking?.drivingLicenseNumber || user?.drivingLicense || 'DL-VERIFIED-XXXXX';
+  const renterEmail = booking?.customerEmail || user?.email || 'renter@email.com';
+  const renterPhone = booking?.customerPhone || user?.phone || '+91 98490 12345';
+  const renterPan = booking?.panCard || user?.panCard || 'ABCSR8491A';
+  const renterAadhaar = booking?.aadhaarCard || user?.aadhaarCard || '4928 1092 3841';
+  const renterAddress = booking?.permanentAddress || (user?.permanentAddress ? `${user.permanentAddress.houseNo}, ${user.permanentAddress.street}, ${user.permanentAddress.city} - ${user.permanentAddress.pincode}` : 'Flat 402, Sri Nilayam Residency, Road No. 12, Banjara Hills, Hyderabad - 500034');
+  const familyPhone = booking?.familyContactPhone || user?.familyContact?.phone || '+91 94401 98765';
+  const familyName = booking?.familyContactName || user?.familyContact?.name || 'V. R. Reddy';
+  const familyRelation = booking?.familyContactRelation || user?.familyContact?.relationship || 'Father';
+
   const vehicleName = booking ? `${booking.vehicleBrand} ${booking.vehicleName}` : (vehicle ? `${vehicle.brand} ${vehicle.name}` : 'Commercial Fleet Vehicle');
   const vehicleReg = booking?.vehicleRegistrationNumber || vehicle?.registrationNumber || 'REG-FLEET-990';
   const vehicleCat = vehicle?.category || 'Premium Category';
@@ -107,15 +118,26 @@ export const RentalAgreementModal: React.FC<RentalAgreementModalProps> = ({
 
             {/* The User (Lessee / Renter) */}
             <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200 space-y-2">
-              <div className="flex items-center gap-2 font-bold text-neutral-900 border-b border-neutral-200 pb-1.5">
-                <User className="w-4 h-4 text-neutral-700" />
-                <span>THE USER / RENTER (LESSEE)</span>
+              <div className="flex items-center justify-between border-b border-neutral-200 pb-1.5">
+                <div className="flex items-center gap-2 font-bold text-neutral-900">
+                  <User className="w-4 h-4 text-neutral-700" />
+                  <span>THE USER / RENTER (LESSEE)</span>
+                </div>
+                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/70 px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                  <CheckCircle2 className="w-2.5 h-2.5" />
+                  <span>e-KYC Verified</span>
+                </span>
               </div>
               <div className="space-y-1 text-[11px] text-neutral-600">
-                <p><strong>Primary Driver:</strong> <span className="font-semibold text-neutral-900">{renterName}</span></p>
-                <p><strong>Driving License Number:</strong> <span className="font-mono font-bold text-neutral-900">{renterLicense}</span></p>
-                <p><strong>Verified Phone:</strong> {renterPhone}</p>
-                <p><strong>Contact Email:</strong> {renterEmail}</p>
+                <p><strong>Primary Driver:</strong> <span className="font-semibold text-neutral-900">{renterName}</span> ({renterAge} yrs, {renterGender})</p>
+                <p><strong>Driving License:</strong> <span className="font-mono font-bold text-neutral-900">{renterLicense}</span></p>
+                <div className="grid grid-cols-2 gap-1 text-[10px] py-0.5">
+                  <p><strong>PAN:</strong> <span className="font-mono text-neutral-800">{renterPan} ✓</span></p>
+                  <p><strong>Aadhaar:</strong> <span className="font-mono text-neutral-800">{renterAadhaar} ✓</span></p>
+                </div>
+                <p><strong>Verified Contacts:</strong> {renterPhone} • {renterEmail}</p>
+                <p><strong>Permanent Address:</strong> <span className="text-neutral-800">{renterAddress}</span></p>
+                <p><strong>Family Emergency Contact:</strong> <span className="text-neutral-800">{familyName} ({familyRelation}) — {familyPhone}</span></p>
               </div>
             </div>
 

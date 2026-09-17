@@ -129,9 +129,39 @@ export const PRESET_USERS = [
   {
     id: 'usr-samhitha',
     name: 'Samhitha Reddy',
+    age: 24,
+    gender: 'Female' as const,
     email: 'samhithareddy006@gmail.com',
+    isEmailVerified: true,
     phone: '+91 98490 12345',
+    isPhoneVerified: true,
     drivingLicense: 'TS-092023004812',
+    panCard: 'ABCSR8491A',
+    isPanVerified: true,
+    aadhaarCard: '4928 1092 3841',
+    isAadhaarVerified: true,
+    permanentAddress: {
+      houseNo: 'Flat 402, Sri Nilayam Residency',
+      street: 'Road No. 12, Banjara Hills',
+      areaLandmark: 'Opp. Taj Krishna Gate',
+      city: 'Hyderabad',
+      state: 'Telangana',
+      pincode: '500034'
+    },
+    currentAddress: {
+      houseNo: 'Flat 402, Sri Nilayam Residency',
+      street: 'Road No. 12, Banjara Hills',
+      areaLandmark: 'Opp. Taj Krishna Gate',
+      city: 'Hyderabad',
+      state: 'Telangana',
+      pincode: '500034',
+      sameAsPermanent: true
+    },
+    familyContact: {
+      name: 'V. R. Reddy',
+      relationship: 'Father',
+      phone: '+91 94401 98765'
+    },
     countryCode: 'IN',
     city: 'Hyderabad',
     avatar: 'SR'
@@ -139,9 +169,39 @@ export const PRESET_USERS = [
   {
     id: 'usr-alex',
     name: 'Alex Miller',
+    age: 29,
+    gender: 'Male' as const,
     email: 'alex.miller@example.com',
+    isEmailVerified: true,
     phone: '+1 (555) 234-5678',
+    isPhoneVerified: true,
     drivingLicense: 'NY-884920194',
+    panCard: 'USAID9281X',
+    isPanVerified: true,
+    aadhaarCard: '8820 9182 3019',
+    isAadhaarVerified: true,
+    permanentAddress: {
+      houseNo: 'Apt 8B, Hudson Tower',
+      street: '450 West 42nd St',
+      areaLandmark: 'Midtown West',
+      city: 'New York',
+      state: 'NY',
+      pincode: '10036'
+    },
+    currentAddress: {
+      houseNo: 'Apt 8B, Hudson Tower',
+      street: '450 West 42nd St',
+      areaLandmark: 'Midtown West',
+      city: 'New York',
+      state: 'NY',
+      pincode: '10036',
+      sameAsPermanent: true
+    },
+    familyContact: {
+      name: 'Sarah Miller',
+      relationship: 'Spouse',
+      phone: '+1 (555) 876-5432'
+    },
     countryCode: 'US',
     city: 'New York',
     avatar: 'AM'
@@ -149,9 +209,39 @@ export const PRESET_USERS = [
   {
     id: 'usr-priya',
     name: 'Priya Sharma',
+    age: 27,
+    gender: 'Female' as const,
     email: 'priya.sharma@example.in',
+    isEmailVerified: true,
     phone: '+91 91234 56789',
+    isPhoneVerified: true,
     drivingLicense: 'KA-012022009841',
+    panCard: 'BPDPS2019K',
+    isPanVerified: true,
+    aadhaarCard: '6610 4910 8201',
+    isAadhaarVerified: true,
+    permanentAddress: {
+      houseNo: 'House #14, Green Glen Layout',
+      street: 'Outer Ring Road, Bellandur',
+      areaLandmark: 'Behind Ecospace Tech Park',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      pincode: '500103'
+    },
+    currentAddress: {
+      houseNo: 'House #14, Green Glen Layout',
+      street: 'Outer Ring Road, Bellandur',
+      areaLandmark: 'Behind Ecospace Tech Park',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      pincode: '500103',
+      sameAsPermanent: true
+    },
+    familyContact: {
+      name: 'Rakesh Sharma',
+      relationship: 'Brother',
+      phone: '+91 98450 11223'
+    },
     countryCode: 'IN',
     city: 'Bengaluru',
     avatar: 'PS'
@@ -159,9 +249,39 @@ export const PRESET_USERS = [
   {
     id: 'usr-oliver',
     name: 'Oliver Clarke',
+    age: 33,
+    gender: 'Male' as const,
     email: 'oliver.clarke@example.co.uk',
+    isEmailVerified: true,
     phone: '+44 7700 900123',
+    isPhoneVerified: true,
     drivingLicense: 'CLARK805129OL99',
+    panCard: 'GBRUK8821Z',
+    isPanVerified: true,
+    aadhaarCard: '7721 8839 0012',
+    isAadhaarVerified: true,
+    permanentAddress: {
+      houseNo: 'Flat 12, Regent Court',
+      street: '22 Kensington High St',
+      areaLandmark: 'Near Kensington Gardens',
+      city: 'London',
+      state: 'Greater London',
+      pincode: 'W8 4PT'
+    },
+    currentAddress: {
+      houseNo: 'Flat 12, Regent Court',
+      street: '22 Kensington High St',
+      areaLandmark: 'Near Kensington Gardens',
+      city: 'London',
+      state: 'Greater London',
+      pincode: 'W8 4PT',
+      sameAsPermanent: true
+    },
+    familyContact: {
+      name: 'Emma Clarke',
+      relationship: 'Mother',
+      phone: '+44 7700 900456'
+    },
     countryCode: 'GB',
     city: 'London',
     avatar: 'OC'

@@ -62,8 +62,17 @@ export interface Booking {
   customerName: string;
   customerEmail: string;
   customerPhone: string;
+  customerAge?: number;
+  customerGender?: string;
   drivingLicenseNumber: string;
   idProofNumber?: string;
+  panCard?: string;
+  aadhaarCard?: string;
+  permanentAddress?: string;
+  currentAddress?: string;
+  familyContactPhone?: string;
+  familyContactName?: string;
+  familyContactRelation?: string;
   
   // Trip details
   pickupLocation: string;
@@ -135,13 +144,41 @@ export interface UserPlace {
   sampleCities: string[];
 }
 
+export interface AddressDetails {
+  houseNo: string;
+  street: string;
+  areaLandmark?: string;
+  city: string;
+  state: string;
+  pincode: string;
+}
+
+export interface FamilyContact {
+  name: string;
+  relationship: string;
+  phone: string;
+}
+
 export interface UserProfile {
   id: string;
   name: string;
+  age?: number;
+  gender?: 'Male' | 'Female' | 'Other' | 'Prefer not to say';
   email: string;
+  isEmailVerified?: boolean;
   phone: string;
+  isPhoneVerified?: boolean;
   drivingLicense: string;
+  panCard?: string;
+  isPanVerified?: boolean;
+  aadhaarCard?: string;
+  isAadhaarVerified?: boolean;
+  permanentAddress?: AddressDetails;
+  currentAddress?: AddressDetails & { sameAsPermanent?: boolean };
+  familyContact?: FamilyContact;
   countryCode: string;
   city: string;
   isLoggedIn: boolean;
 }
+
+export * from './types/crash';

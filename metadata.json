@@ -1,6 +1,6 @@
 {
   "name": "Vehicle Rental System",
-  "description": "A comprehensive web-based vehicle rental management system featuring fleet catalog, real-time booking, dynamic price calculation, booking receipts, live GPS tracking with anti-theft telemetry, and admin fleet management.",
+  "description": "A comprehensive web-based vehicle rental management system featuring multi-step KYC user verification (PAN, Aadhaar, verified email/phone, security addresses, emergency family contact), digital user-owner bailment agreements, live GPS satellite tracking, anti-theft immobilizer, and autonomous vehicle crash detection with automatic SOS emergency calling and owner dispatch.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

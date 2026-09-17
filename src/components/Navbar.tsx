@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Car, CalendarCheck, BookOpen, Wrench, Globe2, User, LogOut, ChevronDown, Sparkles, Navigation } from 'lucide-react';
+import { Car, CalendarCheck, BookOpen, Wrench, Globe2, User, LogOut, ChevronDown, Sparkles, Navigation, CheckCircle2 } from 'lucide-react';
 import { useUser } from '../context/UserContext';
 
 interface NavbarProps {
@@ -163,13 +163,53 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {isUserMenuOpen && (
                   <div 
                     id="user-profile-dropdown"
-                    className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-neutral-200 py-2 z-50 animate-in fade-in zoom-in-95 duration-100"
+                    className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-neutral-200 py-2 z-50 animate-in fade-in zoom-in-95 duration-100"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <div className="px-3 py-2 border-b border-neutral-100">
-                      <p className="text-xs font-bold text-neutral-900 truncate">{user.name}</p>
+                    <div className="px-3.5 py-2.5 border-b border-neutral-100">
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-bold text-neutral-900 truncate">{user.name}</p>
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex items-center gap-0.5">
+                          <CheckCircle2 className="w-2.5 h-2.5 text-emerald-600" />
+                          <span>KYC Verified</span>
+                        </span>
+                      </div>
                       <p className="text-[11px] text-neutral-500 truncate">{user.email}</p>
-                      <div className="mt-1.5 flex items-center gap-1.5 text-[10px] text-neutral-600 bg-neutral-50 px-2 py-1 rounded">
+                      
+                      {/* Demographic & Contact Details */}
+                      <div className="mt-1 text-[10px] text-neutral-600 flex items-center gap-2">
+                        {user.age && <span>{user.age} yrs</span>}
+                        {user.gender && <span>• {user.gender}</span>}
+                        <span>• {user.phone}</span>
+                      </div>
+
+                      {/* Government KYC summary */}
+                      <div className="mt-1.5 pt-1.5 border-t border-neutral-100/80 text-[10px] space-y-0.5 text-neutral-600">
+                        {user.aadhaarCard && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-neutral-500">Aadhaar:</span>
+                            <span className="font-mono font-medium text-neutral-800">
+                              {user.aadhaarCard.slice(-9)} ✓
+                            </span>
+                          </div>
+                        )}
+                        {user.panCard && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-neutral-500">PAN Card:</span>
+                            <span className="font-mono font-medium text-neutral-800">{user.panCard} ✓</span>
+                          </div>
+                        )}
+                        {user.familyContact?.phone && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-neutral-500">Emergency:</span>
+                            <span className="text-neutral-800 truncate max-w-[130px]">
+                              {user.familyContact.name} ({user.familyContact.relationship})
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="mt-2 flex items-center gap-1.5 text-[10px] text-neutral-600 bg-neutral-50 px-2 py-1 rounded">
                         <span>{place.flag}</span>
                         <span>{user.city ? `${user.city}, ` : ''}{place.countryName}</span>
                         <span className="ml-auto font-bold text-emerald-700">{place.currencyDisplay}</span>
@@ -186,7 +226,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         className="w-full text-left px-3 py-1.5 text-xs text-neutral-700 hover:bg-neutral-100 flex items-center gap-2"
                       >
                         <User className="w-3.5 h-3.5 text-neutral-400" />
-                        <span>Edit Profile / Switch Account</span>
+                        <span>Edit Profile & KYC Details</span>
                       </button>
 
                       <button

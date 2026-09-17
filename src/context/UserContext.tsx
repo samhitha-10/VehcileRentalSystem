@@ -27,9 +27,39 @@ const STORAGE_KEYS = {
 const defaultUser: UserProfile = {
   id: 'usr-samhitha',
   name: 'Samhitha Reddy',
+  age: 24,
+  gender: 'Female',
   email: 'samhithareddy006@gmail.com',
+  isEmailVerified: true,
   phone: '+91 98490 12345',
+  isPhoneVerified: true,
   drivingLicense: 'TS-092023004812',
+  panCard: 'ABCSR8491A',
+  isPanVerified: true,
+  aadhaarCard: '4928 1092 3841',
+  isAadhaarVerified: true,
+  permanentAddress: {
+    houseNo: 'Flat 402, Sri Nilayam Residency',
+    street: 'Road No. 12, Banjara Hills',
+    areaLandmark: 'Opp. Taj Krishna Gate',
+    city: 'Hyderabad',
+    state: 'Telangana',
+    pincode: '500034'
+  },
+  currentAddress: {
+    houseNo: 'Flat 402, Sri Nilayam Residency',
+    street: 'Road No. 12, Banjara Hills',
+    areaLandmark: 'Opp. Taj Krishna Gate',
+    city: 'Hyderabad',
+    state: 'Telangana',
+    pincode: '500034',
+    sameAsPermanent: true
+  },
+  familyContact: {
+    name: 'V. R. Reddy',
+    relationship: 'Father',
+    phone: '+91 94401 98765'
+  },
   countryCode: 'IN',
   city: 'Hyderabad',
   isLoggedIn: true
@@ -92,11 +122,22 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = (userData: Partial<UserProfile>) => {
     const matchedPlace = SUPPORTED_PLACES.find(p => p.countryCode === (userData.countryCode || user.countryCode)) || place;
     const updatedUser: UserProfile = {
-      id: userData.id || `usr-${Date.now()}`,
-      name: userData.name || 'Valued Traveler',
-      email: userData.email || 'traveler@example.com',
-      phone: userData.phone || '+91 98765 43210',
-      drivingLicense: userData.drivingLicense || 'DL-PENDING',
+      id: userData.id || user.id || `usr-${Date.now()}`,
+      name: userData.name || user.name || 'Valued Traveler',
+      age: userData.age !== undefined ? userData.age : user.age,
+      gender: userData.gender || user.gender || 'Prefer not to say',
+      email: userData.email || user.email || 'traveler@example.com',
+      isEmailVerified: userData.isEmailVerified !== undefined ? userData.isEmailVerified : (user.isEmailVerified ?? true),
+      phone: userData.phone || user.phone || '+91 98765 43210',
+      isPhoneVerified: userData.isPhoneVerified !== undefined ? userData.isPhoneVerified : (user.isPhoneVerified ?? true),
+      drivingLicense: userData.drivingLicense || user.drivingLicense || 'DL-PENDING',
+      panCard: userData.panCard || user.panCard,
+      isPanVerified: userData.isPanVerified !== undefined ? userData.isPanVerified : user.isPanVerified,
+      aadhaarCard: userData.aadhaarCard || user.aadhaarCard,
+      isAadhaarVerified: userData.isAadhaarVerified !== undefined ? userData.isAadhaarVerified : user.isAadhaarVerified,
+      permanentAddress: userData.permanentAddress || user.permanentAddress,
+      currentAddress: userData.currentAddress || user.currentAddress,
+      familyContact: userData.familyContact || user.familyContact,
       countryCode: matchedPlace.countryCode,
       city: userData.city || matchedPlace.defaultCity,
       isLoggedIn: true

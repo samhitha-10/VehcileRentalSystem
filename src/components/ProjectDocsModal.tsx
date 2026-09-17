@@ -157,6 +157,18 @@ export const ProjectDocsModal: React.FC<ProjectDocsModalProps> = ({ onClose }) =
             <span>A: The system combines Verified Driver Identity (Government Driving License, Contact KYC, and digital agreement) with the <strong>Live GPS Tracker & Anti-Theft Telemetry system</strong>. In the event of theft or failure to return, administrators can: (1) transmit an IoT Satellite Kill Switch command to immobilize the engine, (2) trigger remote door locking and audible sirens, and (3) generate an official <strong>Law Enforcement Police Recovery Dossier</strong> with exact GPS coordinates (Lat/Lng) to auto-flag highway toll plazas (FASTag) and city ANPR traffic cameras for immediate apprehension.</span>
           </div>
 
+          <div className="p-3 rounded-lg bg-red-50/70 border border-red-200">
+            <strong className="text-red-950 block mb-0.5">Q: What happens if a vehicle crashes? How does the owner find out and how is emergency help dispatched?</strong>
+            <span>A: The vehicle's onboard 5G IoT telemetry module features an autonomous <strong>High-Impact G-Sensor &amp; Airbag Crash Detection System</strong>:
+              <ul className="list-disc list-inside mt-1 space-y-0.5 pl-1 text-red-900 text-[11px]">
+                <li><strong>Instant Crash Sensing:</strong> When sudden deceleration exceeds 4.5G or airbags trigger, the tracker registers a critical incident, captures impact speed, and freezes coordinates.</li>
+                <li><strong>Owner Notification Hub:</strong> The system transmits an automated high-priority alert to the vehicle owner (+91 99887 76655) with exact highway/street location, driver identity, and time of collision.</li>
+                <li><strong>Automated Emergency Calling (SOS):</strong> A 10-second automatic countdown initiates immediate connection to <strong>EMS &amp; Highway Police (112)</strong>, vehicle owner dispatch, and the driver's registered emergency family contact.</li>
+                <li><strong>Autonomous Failsafe:</strong> The vehicle automatically cuts engine fuel/powertrain lines to prevent electrical fires and unlocks door latches for rescue access.</li>
+              </ul>
+            </span>
+          </div>
+
           <div className="p-3 rounded-lg bg-neutral-50 border border-neutral-200/80">
             <strong className="text-neutral-900 block mb-0.5">Q: Where can we see the agreement between the user and the owner?</strong>
             <span>A: The <strong>Master Motor Vehicle Rental Agreement (Owner & User Bailment Contract)</strong> can be viewed and printed from 4 distinct locations:

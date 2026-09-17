@@ -24,9 +24,15 @@ import {
   UserCheck,
   ShieldCheck,
   Zap,
-  Gauge
+  Gauge,
+  AlertOctagon,
+  PhoneCall,
+  Ambulance,
+  PhoneForwarded
 } from 'lucide-react';
 import { Vehicle, Booking } from '../types';
+import { CrashIncident } from '../types/crash';
+import { CrashSOSModal } from './CrashSOSModal';
 import { useUser } from '../context/UserContext';
 
 interface LiveTrackerViewProps {
@@ -36,6 +42,7 @@ interface LiveTrackerViewProps {
   initialBookingId?: string;
   onCloseModal?: () => void;
   isModal?: boolean;
+  onCrashAlert?: (incident: CrashIncident) => void;
 }
 
 export const LiveTrackerView: React.FC<LiveTrackerViewProps> = ({
@@ -73,6 +80,12 @@ export const LiveTrackerView: React.FC<LiveTrackerViewProps> = ({
   const [showTheftDossier, setShowTheftDossier] = useState<boolean>(false);
   const [copiedReport, setCopiedReport] = useState<boolean>(false);
   const [actionNotice, setActionNotice] = useState<string | null>(null);
+
+  // Crash Detection & Emergency SOS State
+  const [activeCrash, setActiveCrash] = useState<CrashIncident | null>(null);
+  const [isCrashModalOpen, setIsCrashModalOpen] = useState<boolean>(false);
+  const [crashGForce, setCrashGForce] = useState<number>(0);
+  const [airbagsTriggered, setAirbagsTriggered] = useState<boolean>(false);
 
   // Route animation progression (0 to 100%)
   const [routeProgress, setRouteProgress] = useState<number>(38);
@@ -179,6 +192,50 @@ SECURITY STATUS:
     navigator.clipboard.writeText(reportText);
     setCopiedReport(true);
     setTimeout(() => setCopiedReport(false), 3000);
+  };
+
+  // Simulate High-Impact Crash Event
+  const handleTriggerCrashSimulation = (severity: 'Moderate' | 'Severe' = 'Severe') => {
+    const impactG = severity === 'Severe' ? 8.6 : 5.2;
+    const impactSpeed = speed > 20 ? speed : 68;
+
+    // Immediately stop car, shut engine, trigger airbags & alarm
+    setSpeed(0);
+    setIsEngineRunning(false);
+    setIsAlarmActive(true);
+    setCrashGForce(impactG);
+    setAirbagsTriggered(true);
+    setIsLiveSimulating(false);
+
+    const crashData: CrashIncident = {
+      id: 'crash-' + Date.now(),
+      vehicleId: activeVehicle.id,
+      bookingId: linkedBooking?.id,
+      timestamp: new Date().toISOString(),
+      severity: severity === 'Severe' ? 'Critical' : 'Moderate',
+      impactGForce: impactG,
+      airbagsDeployed: true,
+      speedAtImpactKmH: impactSpeed,
+      latitude: currentLat,
+      longitude: currentLng,
+      locationAddress: `${activeVehicle.location || 'Highway NH-44'}, Mile Marker 18.4, Near Toll Hub`,
+      driverName: linkedBooking?.customerName || 'Verified Primary Driver',
+      driverPhone: linkedBooking?.customerPhone || '+91 98490 12345',
+      emergencyContactName: linkedBooking?.familyContactName || 'Family Member',
+      emergencyContactPhone: linkedBooking?.familyContactPhone || '+91 94401 98765',
+      emergencyContactRelation: linkedBooking?.familyContactRelation || 'Parent / Next of Kin',
+      status: 'SOS Alert Active',
+      sosCallInitiated: true,
+      sosCallNumber: '112',
+      notifiedOwner: true,
+      notifiedPolice: true,
+      notifiedAmbulance: true,
+      ownerNotifiedAt: new Date().toLocaleTimeString()
+    };
+
+    setActiveCrash(crashData);
+    setIsCrashModalOpen(true);
+    triggerNotice(`🚨 CRASH DETECTED (${impactG} G-Force)! Autonomous SOS dispatched to Owner (+91 99887 76655) and EMS (112).`);
   };
 
   return (
@@ -342,24 +399,42 @@ SECURITY STATUS:
 
               {/* Moving Vehicle GPS Marker */}
               <div 
-                className="absolute transition-all duration-700 flex flex-col items-center z-20"
+                className="absolute transition-all duration-700 flex flex-col items-center z-20 cursor-pointer"
                 style={{
                   left: `${Math.min(84, Math.max(12, routeProgress))}%`,
                   top: `${Math.max(22, Math.min(68, 55 - (routeProgress * 0.35)))}%`
                 }}
+                onClick={() => {
+                  if (activeCrash) {
+                    setIsCrashModalOpen(true);
+                  }
+                }}
               >
                 {/* Vehicle Tooltip Label */}
-                <div className="px-2.5 py-1 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-500 text-[11px] font-bold shadow-xl flex items-center gap-1.5 whitespace-nowrap mb-1">
-                  <Car className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>{activeVehicle.name} • {speed} km/h</span>
-                </div>
+                {activeCrash ? (
+                  <div className="px-2.5 py-1 rounded-lg bg-red-600 text-white border-2 border-white text-[11px] font-black shadow-xl flex items-center gap-1.5 whitespace-nowrap mb-1 animate-bounce">
+                    <AlertOctagon className="w-3.5 h-3.5 text-white animate-spin" />
+                    <span>CRASH DETECTED &bull; SOS ACTIVE</span>
+                  </div>
+                ) : (
+                  <div className="px-2.5 py-1 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-500 text-[11px] font-bold shadow-xl flex items-center gap-1.5 whitespace-nowrap mb-1">
+                    <Car className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>{activeVehicle.name} • {speed} km/h</span>
+                  </div>
+                )}
 
                 {/* Radar Ripple Effect */}
                 <div className="relative flex items-center justify-center">
-                  <div className="w-10 h-10 rounded-full bg-emerald-500/20 animate-ping absolute" />
-                  <div className="w-7 h-7 rounded-full bg-emerald-500/40 animate-pulse absolute" />
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-xl ${isImmobilized ? 'bg-red-600' : 'bg-emerald-500'}`}>
-                    <Navigation className="w-3 h-3 text-white transform rotate-45" />
+                  <div className={`w-12 h-12 rounded-full absolute ${activeCrash ? 'bg-red-500/40 animate-ping' : 'bg-emerald-500/20 animate-ping'}`} />
+                  <div className={`w-8 h-8 rounded-full absolute ${activeCrash ? 'bg-red-500/60 animate-pulse' : 'bg-emerald-500/40 animate-pulse'}`} />
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-xl ${
+                    activeCrash ? 'bg-red-600 animate-pulse' : (isImmobilized ? 'bg-red-600' : 'bg-emerald-500')
+                  }`}>
+                    {activeCrash ? (
+                      <AlertOctagon className="w-3.5 h-3.5 text-white" />
+                    ) : (
+                      <Navigation className="w-3 h-3 text-white transform rotate-45" />
+                    )}
                   </div>
                 </div>
               </div>
@@ -556,6 +631,65 @@ SECURITY STATUS:
             </button>
           </div>
 
+          {/* Box 3: Autonomous Crash & SOS Emergency Telemetry */}
+          <div className="bg-red-50 p-5 rounded-2xl border-2 border-red-300 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-red-200 pb-3">
+              <h3 className="font-extrabold text-sm text-red-950 flex items-center gap-1.5">
+                <AlertOctagon className="w-4 h-4 text-red-600 animate-pulse" />
+                Crash Sensor &amp; SOS Dispatch
+              </h3>
+              <span className="text-[10px] font-bold text-red-800 bg-red-100 px-2 py-0.5 rounded border border-red-300">
+                G-Sensor IoT Active
+              </span>
+            </div>
+
+            <p className="text-xs text-red-900 leading-relaxed">
+              If the vehicle detects impact deceleration (&gt;4.5 G-force) or airbag deployment, it <strong>instantly notifies the vehicle owner</strong>, sends coordinates to the app, and triggers automatic emergency SOS calling (112 / EMS / Owner).
+            </p>
+
+            {activeCrash ? (
+              <div className="p-3 bg-white rounded-xl border border-red-300 text-xs space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-red-700 flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
+                    Crash SOS Triggered
+                  </span>
+                  <span className="font-mono text-[10px] text-neutral-500">
+                    {new Date(activeCrash.timestamp).toLocaleTimeString()}
+                  </span>
+                </div>
+                <p className="text-neutral-700">
+                  Impact: <strong>{activeCrash.impactGForce} G</strong> &bull; Speed: <strong>{activeCrash.speedAtImpactKmH} km/h</strong>
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setIsCrashModalOpen(true)}
+                  className="w-full mt-1 py-2 px-3 rounded-lg text-xs font-bold bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-1.5 transition"
+                >
+                  <PhoneCall className="w-3.5 h-3.5" />
+                  <span>Open Active SOS Call Center</span>
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-[11px] text-red-800 bg-white/70 p-2 rounded-lg border border-red-200">
+                  <span>Impact Status: <strong>Normal (0.0 G)</strong></span>
+                  <span className="text-emerald-700 font-bold">Sensors Armed ✓</span>
+                </div>
+
+                <button
+                  type="button"
+                  id="btn-simulate-crash-incident"
+                  onClick={() => handleTriggerCrashSimulation('Severe')}
+                  className="w-full py-2.5 px-3 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2 transition shadow-md group"
+                >
+                  <AlertOctagon className="w-4 h-4 group-hover:scale-110 transition" />
+                  <span>Simulate Vehicle Crash &amp; SOS Alert</span>
+                </button>
+              </div>
+            )}
+          </div>
+
         </div>
 
       </div>
@@ -699,6 +833,22 @@ SECURITY STATUS:
 
           </div>
         </div>
+      )}
+
+      {/* MODAL: Autonomous Crash SOS Emergency Modal */}
+      {isCrashModalOpen && (
+        <CrashSOSModal
+          isOpen={isCrashModalOpen}
+          incident={activeCrash}
+          vehicle={activeVehicle}
+          booking={linkedBooking}
+          onClose={() => setIsCrashModalOpen(false)}
+          onUpdateStatus={(st) => {
+            if (activeCrash) {
+              setActiveCrash({ ...activeCrash, status: st });
+            }
+          }}
+        />
       )}
 
     </div>

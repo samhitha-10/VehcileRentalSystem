@@ -132,7 +132,16 @@ export const BookingModal: React.FC<BookingModalProps> = ({
       customerName,
       customerEmail,
       customerPhone,
+      customerAge: user.age,
+      customerGender: user.gender,
       drivingLicenseNumber,
+      panCard: user.panCard,
+      aadhaarCard: user.aadhaarCard,
+      permanentAddress: user.permanentAddress ? `${user.permanentAddress.houseNo}, ${user.permanentAddress.street}, ${user.permanentAddress.city} - ${user.permanentAddress.pincode}` : undefined,
+      currentAddress: user.currentAddress ? `${user.currentAddress.houseNo}, ${user.currentAddress.street}, ${user.currentAddress.city} - ${user.currentAddress.pincode}` : undefined,
+      familyContactPhone: user.familyContact?.phone,
+      familyContactName: user.familyContact?.name,
+      familyContactRelation: user.familyContact?.relationship,
       
       pickupLocation: pickupHub,
       dropoffLocation: dropoffHub,
@@ -476,27 +485,54 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           {step === 3 && (
             <form onSubmit={handleConfirmReservation} className="space-y-5">
               
-              {/* Profile Autofill Bar */}
-              <div className="p-3 bg-neutral-50 border border-neutral-200 rounded-xl flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-base">{place.flag}</span>
-                  <div>
-                    <span className="text-xs font-bold text-neutral-900">
-                      Primary Traveler: {customerName || 'Guest'} ({place.countryName})
-                    </span>
-                    <span className="text-[11px] text-neutral-500 block">
-                      Invoiced in {place.currencyDisplay} • Pickup in {place.countryName} Hubs
-                    </span>
+              {/* Profile Autofill Bar with KYC Verification */}
+              <div className="p-3.5 bg-neutral-50 border border-neutral-200 rounded-xl space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">{place.flag}</span>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold text-neutral-900">
+                          {customerName || 'Guest'} {user.age ? `(${user.age}y, ${user.gender})` : ''}
+                        </span>
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
+                          ✓ KYC Verified
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-neutral-500 block">
+                        Currency: {place.currencyDisplay} • Dispatch: {place.countryName} Hubs
+                      </span>
+                    </div>
                   </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsAuthModalOpen(true)}
+                    className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 underline shrink-0"
+                  >
+                    Edit KYC & Security Details
+                  </button>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setIsAuthModalOpen(true)}
-                  className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 underline"
-                >
-                  Switch Profile / Place
-                </button>
+                {/* Micro KYC info pills */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 pt-1 border-t border-neutral-200/70 text-[10px] text-neutral-600">
+                  <div className="truncate">
+                    <span className="text-neutral-400">PAN: </span>
+                    <span className="font-mono font-semibold text-neutral-800">{user.panCard || 'On Record'} ✓</span>
+                  </div>
+                  <div className="truncate">
+                    <span className="text-neutral-400">Aadhaar: </span>
+                    <span className="font-mono font-semibold text-neutral-800">{user.aadhaarCard?.slice(-9) || 'Verified'} ✓</span>
+                  </div>
+                  <div className="truncate">
+                    <span className="text-neutral-400">House: </span>
+                    <span className="font-medium text-neutral-800">{user.permanentAddress?.city || user.city || 'Verified'}</span>
+                  </div>
+                  <div className="truncate">
+                    <span className="text-neutral-400">Emergency: </span>
+                    <span className="font-medium text-neutral-800">{user.familyContact?.relationship}: {user.familyContact?.phone || user.phone}</span>
+                  </div>
+                </div>
               </div>
 
               {/* Form Grid */}
