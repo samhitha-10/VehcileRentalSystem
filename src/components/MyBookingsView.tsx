@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   CalendarCheck, Clock, MapPin, Download, Ban, 
-  PlusCircle, CheckCircle2, AlertTriangle, ArrowRight, ShieldCheck, Car
+  PlusCircle, CheckCircle2, AlertTriangle, ArrowRight, ShieldCheck, Car, Navigation
 } from 'lucide-react';
 import { Booking } from '../types';
 import { formatConverted } from '../utils/pricing';
@@ -12,6 +12,7 @@ interface MyBookingsViewProps {
   onCancelBooking: (bookingId: string) => void;
   onExtendBooking: (bookingId: string, extraDays: number) => void;
   onBrowseFleet: () => void;
+  onTrackBooking?: (booking: Booking) => void;
 }
 
 export const MyBookingsView: React.FC<MyBookingsViewProps> = ({
@@ -19,7 +20,8 @@ export const MyBookingsView: React.FC<MyBookingsViewProps> = ({
   onViewReceipt,
   onCancelBooking,
   onExtendBooking,
-  onBrowseFleet
+  onBrowseFleet,
+  onTrackBooking
 }) => {
   const [activeTab, setActiveTab] = useState<'All' | 'Confirmed' | 'Active' | 'Completed' | 'Cancelled'>('All');
   const [extendingId, setExtendingId] = useState<string | null>(null);
@@ -174,6 +176,19 @@ export const MyBookingsView: React.FC<MyBookingsViewProps> = ({
                   {/* Right: Actions */}
                   <div className="flex items-center gap-2 flex-wrap border-t lg:border-t-0 pt-3 lg:pt-0 w-full lg:w-auto justify-end">
                     
+                    {/* Live GPS Tracker Button */}
+                    {onTrackBooking && (
+                      <button
+                        id={`btn-track-booking-${booking.id}`}
+                        type="button"
+                        onClick={() => onTrackBooking(booking)}
+                        className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-1.5 transition shadow-xs"
+                      >
+                        <Navigation className="w-3.5 h-3.5" />
+                        <span>Live GPS Tracker</span>
+                      </button>
+                    )}
+
                     {/* View Voucher / Receipt */}
                     <button
                       id={`btn-view-receipt-${booking.id}`}

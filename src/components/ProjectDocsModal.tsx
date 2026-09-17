@@ -153,6 +153,11 @@ export const ProjectDocsModal: React.FC<ProjectDocsModalProps> = ({ onClose }) =
           </div>
 
           <div className="p-3 rounded-lg bg-neutral-50 border border-neutral-200/80">
+            <strong className="text-neutral-900 block mb-0.5">Q: If a vehicle gets stolen or overdue, how does the system recover the vehicle?</strong>
+            <span>A: The system combines Verified Driver Identity (Government Driving License, Contact KYC, and digital agreement) with the <strong>Live GPS Tracker & Anti-Theft Telemetry system</strong>. In the event of theft or failure to return, administrators can: (1) transmit an IoT Satellite Kill Switch command to immobilize the engine, (2) trigger remote door locking and audible sirens, and (3) generate an official <strong>Law Enforcement Police Recovery Dossier</strong> with exact GPS coordinates (Lat/Lng) to auto-flag highway toll plazas (FASTag) and city ANPR traffic cameras for immediate apprehension.</span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-neutral-50 border border-neutral-200/80">
             <strong className="text-neutral-900 block mb-0.5">Q: How does the application handle data persistence without an external SQL server?</strong>
             <span>A: It leverages the HTML5 <code className="font-mono text-neutral-800">localStorage</code> API with JSON serialization. When the user completes a booking or adds a vehicle in Admin mode, state is synchronized immediately to client storage.</span>
           </div>

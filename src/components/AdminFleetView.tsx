@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Car, Wrench, DollarSign, CheckCircle2, AlertCircle, Plus, 
-  Trash2, Edit3, RotateCcw, Search, Shield, RefreshCw
+  Trash2, Edit3, RotateCcw, Search, Shield, RefreshCw, Navigation
 } from 'lucide-react';
 import { Vehicle, Booking, VehicleStatus, VehicleCategory, FuelType, TransmissionType } from '../types';
 import { formatCurrency, formatConverted } from '../utils/pricing';
@@ -17,6 +17,7 @@ interface AdminFleetViewProps {
   onDeleteVehicle: (vehicleId: string) => void;
   onUpdateBookingStatus: (bookingId: string, newStatus: Booking['status']) => void;
   onResetFleetData: () => void;
+  onTrackVehicle?: (vehicle: Vehicle) => void;
 }
 
 export const AdminFleetView: React.FC<AdminFleetViewProps> = ({
@@ -27,7 +28,8 @@ export const AdminFleetView: React.FC<AdminFleetViewProps> = ({
   onUpdateVehiclePrice,
   onDeleteVehicle,
   onUpdateBookingStatus,
-  onResetFleetData
+  onResetFleetData,
+  onTrackVehicle
 }) => {
   const { place, formatPrice } = useUser();
   const [activeTab, setActiveTab] = useState<'inventory' | 'reservations'>('inventory');
@@ -332,18 +334,30 @@ export const AdminFleetView: React.FC<AdminFleetViewProps> = ({
 
                     {/* Actions */}
                     <td className="px-4 py-3 text-right">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (confirm(`Remove ${vehicle.brand} ${vehicle.name} from fleet catalog?`)) {
-                            onDeleteVehicle(vehicle.id);
-                          }
-                        }}
-                        className="p-1.5 text-neutral-400 hover:text-red-600 rounded-md hover:bg-red-50 transition"
-                        title="Delete vehicle"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      <div className="flex items-center justify-end gap-1">
+                        {onTrackVehicle && (
+                          <button
+                            type="button"
+                            onClick={() => onTrackVehicle(vehicle)}
+                            className="p-1.5 text-emerald-600 hover:text-emerald-700 rounded-md hover:bg-emerald-50 transition"
+                            title="Live GPS & Anti-Theft Tracker"
+                          >
+                            <Navigation className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (confirm(`Remove ${vehicle.brand} ${vehicle.name} from fleet catalog?`)) {
+                              onDeleteVehicle(vehicle.id);
+                            }
+                          }}
+                          className="p-1.5 text-neutral-400 hover:text-red-600 rounded-md hover:bg-red-50 transition"
+                          title="Delete vehicle"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </td>
 
                   </tr>

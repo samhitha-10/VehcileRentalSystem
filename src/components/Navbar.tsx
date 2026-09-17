@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Car, CalendarCheck, BookOpen, Wrench, Globe2, User, LogOut, ChevronDown, Sparkles } from 'lucide-react';
+import { Car, CalendarCheck, BookOpen, Wrench, Globe2, User, LogOut, ChevronDown, Sparkles, Navigation } from 'lucide-react';
 import { useUser } from '../context/UserContext';
 
 interface NavbarProps {
-  currentView: 'catalog' | 'bookings' | 'admin' | 'docs';
-  setCurrentView: (view: 'catalog' | 'bookings' | 'admin' | 'docs') => void;
+  currentView: 'catalog' | 'bookings' | 'admin' | 'tracker' | 'docs';
+  setCurrentView: (view: 'catalog' | 'bookings' | 'admin' | 'tracker' | 'docs') => void;
   bookingCount: number;
 }
 
@@ -93,6 +93,20 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Wrench className="w-3.5 h-3.5" />
               <span>Fleet Admin</span>
+            </button>
+
+            <button
+              id="nav-tab-tracker"
+              onClick={() => setCurrentView('tracker')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                currentView === 'tracker'
+                  ? 'bg-emerald-600 text-white shadow-xs font-semibold'
+                  : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200/50'
+              }`}
+            >
+              <Navigation className={`w-3.5 h-3.5 ${currentView === 'tracker' ? 'text-white' : 'text-emerald-600'}`} />
+              <span>Live GPS Tracker</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             </button>
 
             <button
@@ -247,6 +261,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             Admin
+          </button>
+          <button
+            id="mobile-nav-tracker"
+            onClick={() => setCurrentView('tracker')}
+            className={`px-3 py-1.5 text-xs font-medium rounded-md whitespace-nowrap flex items-center gap-1 ${
+              currentView === 'tracker' ? 'bg-emerald-600 text-white font-bold' : 'text-emerald-700 bg-emerald-50 border border-emerald-200'
+            }`}
+          >
+            <Navigation className="w-3 h-3" />
+            GPS Tracker
           </button>
           <button
             id="mobile-nav-docs"

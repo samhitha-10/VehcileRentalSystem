@@ -11,11 +11,12 @@ import { ReceiptModal } from './components/ReceiptModal';
 import { ProjectDocsModal } from './components/ProjectDocsModal';
 import { LoginModal } from './components/LoginModal';
 import { PlaceCurrencyModal } from './components/PlaceCurrencyModal';
+import { LiveTrackerView } from './components/LiveTrackerView';
 import { INITIAL_VEHICLES, INITIAL_BOOKINGS } from './data/mockVehicles';
 import { Vehicle, Booking, FilterState, VehicleStatus } from './types';
 import { LOCATIONS } from './data/locations';
 import { UserProvider, useUser } from './context/UserContext';
-import { Sparkles, Car, HelpCircle, Shield, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Car, HelpCircle, Shield, CheckCircle2, Navigation } from 'lucide-react';
 
 const STORAGE_KEYS = {
   VEHICLES: 'autorent_fleet_v1',
@@ -26,7 +27,9 @@ function AppContent() {
   const { isAuthModalOpen, setIsAuthModalOpen, isPlaceModalOpen, setIsPlaceModalOpen } = useUser();
 
   // Navigation View
-  const [currentView, setCurrentView] = useState<'catalog' | 'bookings' | 'admin' | 'docs'>('catalog');
+  const [currentView, setCurrentView] = useState<'catalog' | 'bookings' | 'admin' | 'tracker' | 'docs'>('catalog');
+  const [trackerVehicleId, setTrackerVehicleId] = useState<string | null>(null);
+  const [trackerBookingId, setTrackerBookingId] = useState<string | null>(null);
 
   // Persistence: Fleet & Bookings
   const [vehicles, setVehicles] = useState<Vehicle[]>(() => {
@@ -299,6 +302,11 @@ function AppContent() {
             onCancelBooking={handleCancelBooking}
             onExtendBooking={handleExtendBooking}
             onBrowseFleet={() => setCurrentView('catalog')}
+            onTrackBooking={(b) => {
+              setTrackerBookingId(b.id);
+              setTrackerVehicleId(b.vehicleId);
+              setCurrentView('tracker');
+            }}
           />
         )}
 
@@ -313,10 +321,24 @@ function AppContent() {
             onDeleteVehicle={handleDeleteVehicle}
             onUpdateBookingStatus={handleUpdateBookingStatus}
             onResetFleetData={handleResetFleetData}
+            onTrackVehicle={(v) => {
+              setTrackerVehicleId(v.id);
+              setCurrentView('tracker');
+            }}
           />
         )}
 
-        {/* VIEW 4: WEB TECHNOLOGIES PROJECT DOCS */}
+        {/* VIEW 4: LIVE GPS TRACKER & ANTI-THEFT TELEMETRY */}
+        {currentView === 'tracker' && (
+          <LiveTrackerView
+            vehicles={vehicles}
+            bookings={bookings}
+            initialVehicleId={trackerVehicleId || undefined}
+            initialBookingId={trackerBookingId || undefined}
+          />
+        )}
+
+        {/* VIEW 5: WEB TECHNOLOGIES PROJECT DOCS */}
         {currentView === 'docs' && (
           <ProjectDocsModal onClose={() => setCurrentView('catalog')} />
         )}
@@ -382,6 +404,14 @@ function AppContent() {
             </div>
 
             <div className="flex items-center gap-4 text-[11px]">
+              <button
+                type="button"
+                onClick={() => setCurrentView('tracker')}
+                className="hover:text-emerald-700 font-semibold text-emerald-800 transition flex items-center gap-1"
+              >
+                <Navigation className="w-3 h-3" />
+                Live GPS Tracker
+              </button>
               <button
                 type="button"
                 onClick={() => setCurrentView('docs')}
