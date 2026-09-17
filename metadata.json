@@ -2,5 +2,7 @@
   "name": "Vehicle Rental System",
   "description": "A comprehensive web-based vehicle rental management system featuring fleet catalog, real-time booking, dynamic price calculation, booking receipts, and admin fleet management.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [ 
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
