@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   CalendarCheck, Clock, MapPin, Download, Ban, 
-  PlusCircle, CheckCircle2, AlertTriangle, ArrowRight, ShieldCheck, Car, Navigation
+  PlusCircle, CheckCircle2, AlertTriangle, ArrowRight, ShieldCheck, Car, Navigation, FileCheck
 } from 'lucide-react';
 import { Booking } from '../types';
 import { formatConverted } from '../utils/pricing';
@@ -13,6 +13,7 @@ interface MyBookingsViewProps {
   onExtendBooking: (bookingId: string, extraDays: number) => void;
   onBrowseFleet: () => void;
   onTrackBooking?: (booking: Booking) => void;
+  onViewAgreement?: (booking: Booking) => void;
 }
 
 export const MyBookingsView: React.FC<MyBookingsViewProps> = ({
@@ -21,7 +22,8 @@ export const MyBookingsView: React.FC<MyBookingsViewProps> = ({
   onCancelBooking,
   onExtendBooking,
   onBrowseFleet,
-  onTrackBooking
+  onTrackBooking,
+  onViewAgreement
 }) => {
   const [activeTab, setActiveTab] = useState<'All' | 'Confirmed' | 'Active' | 'Completed' | 'Cancelled'>('All');
   const [extendingId, setExtendingId] = useState<string | null>(null);
@@ -199,6 +201,20 @@ export const MyBookingsView: React.FC<MyBookingsViewProps> = ({
                       <Download className="w-3.5 h-3.5" />
                       <span>Receipt Voucher</span>
                     </button>
+
+                    {/* View Rental Agreement */}
+                    {onViewAgreement && (
+                      <button
+                        id={`btn-view-agreement-${booking.id}`}
+                        type="button"
+                        onClick={() => onViewAgreement(booking)}
+                        className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-300 flex items-center gap-1.5 transition shadow-xs"
+                        title="View legally binding rental contract between owner and user"
+                      >
+                        <FileCheck className="w-3.5 h-3.5 text-indigo-600" />
+                        <span>Rental Agreement</span>
+                      </button>
+                    )}
 
                     {/* Extend days */}
                     {canModify && (

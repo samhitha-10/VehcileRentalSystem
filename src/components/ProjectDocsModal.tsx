@@ -158,6 +158,19 @@ export const ProjectDocsModal: React.FC<ProjectDocsModalProps> = ({ onClose }) =
           </div>
 
           <div className="p-3 rounded-lg bg-neutral-50 border border-neutral-200/80">
+            <strong className="text-neutral-900 block mb-0.5">Q: Where can we see the agreement between the user and the owner?</strong>
+            <span>A: The <strong>Master Motor Vehicle Rental Agreement (Owner & User Bailment Contract)</strong> can be viewed and printed from 4 distinct locations:
+              <ul className="list-disc list-inside mt-1 space-y-0.5 pl-1 text-neutral-700">
+                <li><strong>During Reservation (Step 3):</strong> Click <em>"Read Contract"</em> in the driver checkout screen before booking.</li>
+                <li><strong>On Booking Confirmation (Step 4):</strong> Click <em>"View Signed Agreement"</em>.</li>
+                <li><strong>In "My Rentals" Dashboard:</strong> Every confirmed reservation card features a direct <em>"Rental Agreement"</em> button.</li>
+                <li><strong>In the Digital Receipt Voucher & Footer:</strong> Click <em>"View Signed Rental Agreement"</em> on any voucher or click <em>"Owner & User Agreement"</em> in the page footer.</li>
+              </ul>
+              This legal document formalizes the bailment terms between <strong>The Owner (AutoFleet Logistics Ltd.)</strong> and <strong>The User (Verified Primary Driver)</strong>, detailing vehicle identification (VIN & Reg #), authorized driver warranty, strict prohibitions (no drunk driving/subleasing), GPS telemetry & remote immobilizer consent, damage liability deductibles, and digital signatures.
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-neutral-50 border border-neutral-200/80">
             <strong className="text-neutral-900 block mb-0.5">Q: How does the application handle data persistence without an external SQL server?</strong>
             <span>A: It leverages the HTML5 <code className="font-mono text-neutral-800">localStorage</code> API with JSON serialization. When the user completes a booking or adds a vehicle in Admin mode, state is synchronized immediately to client storage.</span>
           </div>

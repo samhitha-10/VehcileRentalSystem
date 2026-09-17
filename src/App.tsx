@@ -12,11 +12,12 @@ import { ProjectDocsModal } from './components/ProjectDocsModal';
 import { LoginModal } from './components/LoginModal';
 import { PlaceCurrencyModal } from './components/PlaceCurrencyModal';
 import { LiveTrackerView } from './components/LiveTrackerView';
+import { RentalAgreementModal } from './components/RentalAgreementModal';
 import { INITIAL_VEHICLES, INITIAL_BOOKINGS } from './data/mockVehicles';
 import { Vehicle, Booking, FilterState, VehicleStatus } from './types';
 import { LOCATIONS } from './data/locations';
 import { UserProvider, useUser } from './context/UserContext';
-import { Sparkles, Car, HelpCircle, Shield, CheckCircle2, Navigation } from 'lucide-react';
+import { Sparkles, Car, HelpCircle, Shield, CheckCircle2, Navigation, FileCheck } from 'lucide-react';
 
 const STORAGE_KEYS = {
   VEHICLES: 'autorent_fleet_v1',
@@ -96,6 +97,7 @@ function AppContent() {
   const [selectedVehicleForDetails, setSelectedVehicleForDetails] = useState<Vehicle | null>(null);
   const [selectedVehicleForBooking, setSelectedVehicleForBooking] = useState<Vehicle | null>(null);
   const [receiptModalBooking, setReceiptModalBooking] = useState<Booking | null>(null);
+  const [agreementModalData, setAgreementModalData] = useState<{ booking?: Booking | null; vehicle?: Vehicle | null } | null>(null);
 
   // Filter and Sort Vehicles
   const filteredVehicles = useMemo(() => {
@@ -307,6 +309,7 @@ function AppContent() {
               setTrackerVehicleId(b.vehicleId);
               setCurrentView('tracker');
             }}
+            onViewAgreement={(b) => setAgreementModalData({ booking: b })}
           />
         )}
 
@@ -370,6 +373,7 @@ function AppContent() {
             setSelectedVehicleForBooking(null);
             setReceiptModalBooking(booking);
           }}
+          onViewAgreement={(b, v) => setAgreementModalData({ booking: b, vehicle: v || selectedVehicleForBooking })}
         />
       )}
 
@@ -378,6 +382,16 @@ function AppContent() {
         <ReceiptModal
           booking={receiptModalBooking}
           onClose={() => setReceiptModalBooking(null)}
+          onViewAgreement={(b) => setAgreementModalData({ booking: b })}
+        />
+      )}
+
+      {/* MODAL: Legally Binding Rental Agreement (Contract between User & Owner) */}
+      {agreementModalData && (
+        <RentalAgreementModal
+          booking={agreementModalData.booking}
+          vehicle={agreementModalData.vehicle}
+          onClose={() => setAgreementModalData(null)}
         />
       )}
 
@@ -403,7 +417,16 @@ function AppContent() {
               <span>• Web Technologies Laboratory Project</span>
             </div>
 
-            <div className="flex items-center gap-4 text-[11px]">
+            <div className="flex items-center gap-4 text-[11px] flex-wrap justify-center sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setAgreementModalData({})}
+                className="hover:text-indigo-700 font-semibold text-indigo-900 transition flex items-center gap-1"
+                title="View standard Master Rental Agreement between Renter and Fleet Owner"
+              >
+                <FileCheck className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Owner & User Agreement</span>
+              </button>
               <button
                 type="button"
                 onClick={() => setCurrentView('tracker')}

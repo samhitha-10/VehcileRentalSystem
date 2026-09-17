@@ -18,6 +18,7 @@ interface BookingModalProps {
   onClose: () => void;
   onBookingSuccess: (newBooking: Booking) => void;
   onViewReceipt: (booking: Booking) => void;
+  onViewAgreement?: (booking?: Booking, vehicle?: Vehicle) => void;
 }
 
 export const BookingModal: React.FC<BookingModalProps> = ({
@@ -27,7 +28,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   defaultLocation,
   onClose,
   onBookingSuccess,
-  onViewReceipt
+  onViewReceipt,
+  onViewAgreement
 }) => {
   const { user, place, formatPrice, formatConverted, setIsAuthModalOpen } = useUser();
 
@@ -610,6 +612,27 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 </div>
               </div>
 
+              {/* Legal Agreement Notice between User & Owner */}
+              <div className="p-3 bg-neutral-100 rounded-xl border border-neutral-200 text-[11px] text-neutral-600 flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-neutral-800">
+                    Master Rental Agreement (User & Owner):
+                  </p>
+                  <p className="text-[10px] text-neutral-500 mt-0.5">
+                    By confirming this reservation, you and AutoFleet Logistics agree to the digital bailment contract, GPS telemetry, and KYC verification terms.
+                  </p>
+                </div>
+                {onViewAgreement && (
+                  <button
+                    type="button"
+                    onClick={() => onViewAgreement(undefined, vehicle)}
+                    className="shrink-0 px-2.5 py-1 text-[11px] font-bold text-neutral-900 bg-white hover:bg-neutral-50 border border-neutral-300 rounded-lg transition"
+                  >
+                    Read Contract
+                  </button>
+                )}
+              </div>
+
             </form>
           )}
 
@@ -681,6 +704,18 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   <Download className="w-3.5 h-3.5" />
                   <span>View Printable Voucher Receipt</span>
                 </button>
+
+                {onViewAgreement && (
+                  <button
+                    id="btn-step4-view-agreement"
+                    type="button"
+                    onClick={() => onViewAgreement(confirmedBooking)}
+                    className="px-4 py-2 text-xs font-bold rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-300 flex items-center gap-2 transition"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>View Signed Agreement</span>
+                  </button>
+                )}
 
                 <button
                   id="btn-done-booking"

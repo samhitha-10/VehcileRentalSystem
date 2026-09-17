@@ -1,14 +1,15 @@
 import React from 'react';
-import { X, Printer, CheckCircle2, ShieldCheck, MapPin, Calendar, Clock, Car, QrCode } from 'lucide-react';
+import { X, Printer, CheckCircle2, ShieldCheck, MapPin, Calendar, Clock, Car, QrCode, FileText } from 'lucide-react';
 import { Booking } from '../types';
 import { formatConverted } from '../utils/pricing';
 
 interface ReceiptModalProps {
   booking: Booking | null;
   onClose: () => void;
+  onViewAgreement?: (booking: Booking) => void;
 }
 
-export const ReceiptModal: React.FC<ReceiptModalProps> = ({ booking, onClose }) => {
+export const ReceiptModal: React.FC<ReceiptModalProps> = ({ booking, onClose, onViewAgreement }) => {
   if (!booking) return null;
 
   const handlePrint = () => {
@@ -209,7 +210,19 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ booking, onClose }) 
         </div>
 
         {/* Modal Bottom Close */}
-        <div className="p-4 bg-neutral-50 border-t border-neutral-200 text-right print:hidden">
+        <div className="p-4 bg-neutral-50 border-t border-neutral-200 flex items-center justify-between print:hidden">
+          {onViewAgreement ? (
+            <button
+              id="btn-receipt-view-agreement"
+              type="button"
+              onClick={() => onViewAgreement(booking)}
+              className="px-4 py-2 rounded-xl text-xs font-bold text-neutral-900 bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 flex items-center gap-1.5 transition"
+            >
+              <FileText className="w-3.5 h-3.5 text-indigo-600" />
+              <span>View Signed Rental Agreement (Owner & User)</span>
+            </button>
+          ) : <div />}
+
           <button
             type="button"
             onClick={onClose}
